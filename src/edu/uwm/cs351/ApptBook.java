@@ -416,24 +416,43 @@ public class ApptBook implements Cloneable {
 			throw new OutOfMemoryError();
 		}
 		
-		if (data.length < minimumCapacity && minimumCapacity/data.length == 2) {
+																								//Forgot to write comments on this method
+																								//Essentially, just checks through each case
+																								//and makes a new array depending on that case.
+		
+		if (minimumCapacity/data.length >= 1 && minimumCapacity/data.length <= 2) {
+																								//If the quotient is between the inclusive range of
+																								//1 and 2 then the capacity will double as the
+																								//minimumCapacity will then be at least greater
+																								//or double the data array's capacity
 			Appointment[] temp = new Appointment[2*data.length];
-			for (int i = 0; i < 0; ++i) {
+			for (int i = 0; i < data.length; ++i) {
 				temp[i] = data[i];
 			}
 			data = temp;
 		}
 		else if (minimumCapacity/data.length > 2) {
+																								//If the quotient is larger than 2, then minimumCapacity
+																								//is more than double than the array and will be of that
+																								//capacity instead.
 			Appointment[] temp = new Appointment[minimumCapacity];
-			for (int i = 0; i < 0; ++i) {
+			for (int i = 0; i < data.length; ++i) {
 				temp[i] = data[i];
 			}
 			data = temp;
 		}
 		
-		if (data.length == minimumCapacity) {
-			boolean y = true;
+		if (data.length < minimumCapacity) {
+																								//Checks if data's capacity is lower than the minimum
+																								//Capacity after the case checks and will equal data's
+																								//capacity to the minimumCapacity if it has failed both.
+			Appointment[] temp = new Appointment[minimumCapacity];
+			for (int i = 0; i < data.length; ++i) {
+				temp[i] = data[i];
+			}
 		}
+		
+
 
 		
 	}
@@ -463,36 +482,7 @@ public class ApptBook implements Cloneable {
 		
 		assert wellFormed() : "invariant failed at start of insert";
 		// TODO: Implemented by student.			
-																							//Setup a temporary Appointment Array to
-																							//add the new element.
-		Appointment[] temp = new Appointment[data.length+1];
-																							//Setup an integer field elementPosition
-																							//to keep track where the new element
-																							//is supposed to be inserted.
-		int elementPosition = 0;
-		
-		if (data == null) {
-			temp[currentIndex] = element;
-		}
-		else {
-			for (int i = 0; i < data.length; ++i) {
-				if (data[i] == element) {
-					elementPosition = i + 1;
-					temp[elementPosition] = element;
-					break;
-				}
-			}
-		}
 
-		
-		for (int i = 0; i < elementPosition; ++i) {
-			temp[i] = data[i];
-		}
-		
-		this.manyItems++;
-		
-		
-		data = temp;
 
 		
 		assert wellFormed() : "invariant failed at end of insert";
