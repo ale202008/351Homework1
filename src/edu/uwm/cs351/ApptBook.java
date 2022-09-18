@@ -5,6 +5,8 @@ package edu.uwm.cs351;
 
 import junit.framework.TestCase;
 
+//Andrew Le, Homework #2, CS 351
+
 /******************************************************************************
  * This class is a homework assignment;
  * An ApptBook ("book" for short) is a sequence of Appointment objects in sorted order.
@@ -38,6 +40,10 @@ public class ApptBook implements Cloneable {
 	// TODO: You need 'data', 'manyItems' and 'currentIndex' fields.
 	// Don't initialize them here, but rather in the constructor(s).
 	
+	private final Appointment[] data;
+	private final int manyItems;
+	private final int currentIndex;
+	
 	// Invariant of the ApptBook class:
 	//   1. The number of elements in the books is in the instance variable 
 	//      manyItems.
@@ -63,16 +69,41 @@ public class ApptBook implements Cloneable {
 		
 		// 1. data array is never null
 		// TODO
+		
+		if (data == null) {														//Returns false if the array data null.
+			return false;
+		}
 
 		// 2. The data array has at least as many items in it as manyItems
 		//    claims the book has
 		// TODO
+		
+		if (data.length != manyItems) {											//Returns false if the length of the array
+																				//does not equal to the manyItems.
+																				//Might change depending if length and the
+																				//amount of elements are the same or not.
+			return false;
+		}
 
 		// 3. None of the elements are null and all are in natural order
+		
+		for (int i = 0; i < data.length; ++i) {									//Currently, only checks if elements are null
+																				//and will include the compareTo method once
+																				//I figure it out.
+			if (data[i] == null) {
+				return false;
+			}
+		}
 		
 		// 4. currentIndex is never negative and never more than the number of
 		//    items in the book.
 		// TODO	
+		
+		if (this.currentIndex < 0 || this.currentIndex > manyItems) {			//Current statement says that if currentIndex is 
+																				//lesser than 0 or greater than manyItems, return
+																				//false.
+			return false;
+		}
 
 		// If no problems discovered, return true
 		return true;
@@ -93,6 +124,8 @@ public class ApptBook implements Cloneable {
 	public ApptBook( )
 	{
 		// TODO: Implemented by student.
+		this.data = new Appointment[INITIAL_CAPACITY];						//Will initialize the data array to be of size
+																			//INITIAL_CAPACITY.
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -112,6 +145,8 @@ public class ApptBook implements Cloneable {
 	{
 		
 		// TODO: Implemented by student.
+		this.data = new Appointment[initialCapacity];						//Will initialize the data array to be of size
+																			//initialCapacity.
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -124,6 +159,15 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of size";
 		// TODO: Implemented by student.
+		int count = 0;
+		for (int i = 0; i < data.length; ++i) {								//A for-loop that iterates through the array to
+																			//its set length and keeps count of the elements
+																			//that are not equal to null and returns the number.
+			if (data[i] != null) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	/**
@@ -137,6 +181,10 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of start";
 		// TODO: Implemented by student.
+		Appointment[] temp = data.clone();
+		temp[0] = data.getCurrent();
+		
+		
 		assert wellFormed() : "invariant failed at end of start";
 	}
 
@@ -151,6 +199,7 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of isCurrent";
 		// TODO: Implemented by student.
+		if ()
 	}
 
 	/**
