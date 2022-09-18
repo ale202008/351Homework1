@@ -84,7 +84,7 @@ public class ApptBook implements Cloneable {
 		
 		for (int i = 0; i < data.length; ++i) {									//iterates through the array keeping a count
 																				//field to keep count of how many elements
-																				//exist within the array to compare to manyItems.
+																				//exist within the array to compar manyItems
 			if (data[i] != null) {
 				count++;
 			}
@@ -116,10 +116,10 @@ public class ApptBook implements Cloneable {
 		for (int i = 0; i < count - 1; ++i) {									//Currently trying to use the compareTo method
 																				//to check for natural ordering.
 			if (data[i+1] != null) {
-				for (int y = 0; y < count - 1; ++y) {
-					if (data[i].compareTo(data[y+1]) > 0) {
+//				for (int y = 0; y < count - 1; ++y) {
+					if (data[i].compareTo(data[i+1]) > 0) {
 						return false;
-					}
+//					}
 				}
 			}
 		}
@@ -445,7 +445,52 @@ public class ApptBook implements Cloneable {
 	public void insert(Appointment element)
 	{
 		assert wellFormed() : "invariant failed at start of insert";
-		// TODO: Implemented by student.
+		// TODO: Implemented by student.														//Basically, I set up three fields to temporarily
+																								//hold things: A temporary array, and int field, and
+																								//a boolean
+																								//The int elementPosition serves to remember where the
+																								//element should be placed after checking the cases
+																								//of equality
+																								//Two conditions must occure for the for loop to break
+																								//and that is if there exists and element that is equal
+																								//to the given element or if there exists an element
+																								//greater than the given element.
+		
+		Appointment[] temp = new Appointment[data.length + 1];
+		int elementPosition = 0;
+		
+		for (int i = 0; i < data.length; ++i) {
+			if (data[i].equals(element)) {
+				elementPosition = i + 1;														//The elementPosition is after the equal element
+				temp[elementPosition] = element;
+				break;
+			}
+			if (element.compareTo(data[i]) > 0) {
+				elementPosition = i - 1;														//The elementPosition is right before the element
+																								//greater than it
+				break;
+			}
+		}
+		
+																								//After checking for the cases, process to construct
+																								//the new array after inserting the new one with 
+																								//the if statement running for-loops to fill in elements
+																								//before the elementPosition and the elements after it
+																								//as well in the case of there being an element that is equal
+																								//to the given element.
+																								//Otherwise, simply copy of the elements of data array and
+																								//insert the element wherever it needs to be,
+		
+		for (int i = 0; i < elementPosition; ++i) {
+			temp[i] = data[i];
+		}
+		for (int i = elementPosition; i < data.length; ++i) {
+			temp[i + 1] = data[i];
+		}
+
+		
+		data = temp;
+		
 		assert wellFormed() : "invariant failed at end of insert";
 	}
 
