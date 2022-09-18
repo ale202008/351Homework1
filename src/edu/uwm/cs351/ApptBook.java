@@ -3,6 +3,8 @@
 
 package edu.uwm.cs351;
 
+import java.util.spi.CalendarDataProvider;
+
 import junit.framework.TestCase;
 
 //Andrew Le, Homework #2, CS 351
@@ -40,9 +42,9 @@ public class ApptBook implements Cloneable {
 	// TODO: You need 'data', 'manyItems' and 'currentIndex' fields.
 	// Don't initialize them here, but rather in the constructor(s).
 	
-	private final Appointment[] data;
-	private final int manyItems;
-	private final int currentIndex;
+	private Appointment[] data;													//Removed the final modifier from the fields.
+	private int manyItems;
+	private int currentIndex;
 	
 	// Invariant of the ApptBook class:
 	//   1. The number of elements in the books is in the instance variable 
@@ -126,6 +128,9 @@ public class ApptBook implements Cloneable {
 		// TODO: Implemented by student.
 		this.data = new Appointment[INITIAL_CAPACITY];						//Will initialize the data array to be of size
 																			//INITIAL_CAPACITY.
+																			//Initialized the fields manyItems and currentIndex
+		this.manyItems = 0;
+		this.currentIndex = 0;
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -147,6 +152,9 @@ public class ApptBook implements Cloneable {
 		// TODO: Implemented by student.
 		this.data = new Appointment[initialCapacity];						//Will initialize the data array to be of size
 																			//initialCapacity.
+																			//Initialized the fields manyItems and currentIndex
+		this.manyItems = 0;
+		this.currentIndex = 0;
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -181,10 +189,8 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of start";
 		// TODO: Implemented by student.
-		Appointment[] temp = data.clone();
-		temp[0] = data.getCurrent();
-		
-		
+		this.currentIndex = 0;
+
 		assert wellFormed() : "invariant failed at end of start";
 	}
 
@@ -199,7 +205,15 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of isCurrent";
 		// TODO: Implemented by student.
-		if ()
+		if (currentIndex == manyItems) {										//Checks if currentIndex is equal to manyItems
+																				//and if so that means that there is not a
+																				//current element, so its returns false and 
+																				//returns true if that is not the case.
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	/**
@@ -217,6 +231,18 @@ public class ApptBook implements Cloneable {
 		assert wellFormed() : "invariant failed at start of getCurrent";
 		// TODO: Implemented by student.
 		// Don't change "this" object!
+		
+		if (isCurrent()) {														//If statement that runs the isCurrent method
+																				//to check if there exists a current element
+																				//and if true to return the Appointment object
+																				//at the currrentIndex position within the
+																				//data array.
+			return data[currentIndex];
+		}
+		else {
+			throw new IllegalStateException();
+		}
+
 	}
 
 	/**
@@ -237,6 +263,9 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of advance";
 		// TODO: Implemented by student.
+		
+		
+		
 		assert wellFormed() : "invariant failed at end of advance";
 	}
 
