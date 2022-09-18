@@ -106,20 +106,13 @@ public class ApptBook implements Cloneable {
 			if ((data[i] == null && i > 0)) {
 				return false;
 			}
-////			else if (data.length > 1) {
-////				if (data[i+1] != null && data[i].compareTo(data[i+1]) > 0) {
-////					return false;
-////				}
-//			}
 		}
 		
 		for (int i = 0; i < count - 1; ++i) {									//Currently trying to use the compareTo method
 																				//to check for natural ordering.
 			if (data[i+1] != null) {
-//				for (int y = 0; y < count - 1; ++y) {
 					if (data[i].compareTo(data[i+1]) > 0) {
 						return false;
-//					}
 				}
 			}
 		}
@@ -194,7 +187,9 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of size";
 		// TODO: Implemented by student.
+		
 		int count = 0;
+		
 		for (int i = 0; i < data.length; ++i) {								//A for-loop that iterates through the array to
 																			//its set length and keeps count of the elements
 																			//that are not equal to null and returns the number.
@@ -202,6 +197,7 @@ public class ApptBook implements Cloneable {
 				count++;
 			}
 		}
+		
 		return count;
 	}
 
@@ -216,8 +212,14 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of start";
 		// TODO: Implemented by student.
-		this.currentIndex = 0;
-
+		
+		if (this.data == null) {
+			this.currentIndex = manyItems;
+		}
+		else
+			this.currentIndex = 0;
+		
+		
 		assert wellFormed() : "invariant failed at end of start";
 	}
 
@@ -232,7 +234,7 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of isCurrent";
 		// TODO: Implemented by student.
-		if (currentIndex == manyItems) {										//Checks if currentIndex is equal to manyItems
+		if (this.currentIndex == this.manyItems) {										//Checks if currentIndex is equal to manyItems
 																				//and if so that means that there is not a
 																				//current element, so its returns false and 
 																				//returns true if that is not the case.
@@ -264,7 +266,7 @@ public class ApptBook implements Cloneable {
 																				//and if true to return the Appointment object
 																				//at the currrentIndex position within the
 																				//data array.
-			return data[currentIndex];
+			return this.data[this.currentIndex];
 		}
 		else {
 			throw new IllegalStateException();
@@ -294,7 +296,10 @@ public class ApptBook implements Cloneable {
 		if (isCurrent()) {														//Checks if isCurrent() method returns true,
 																				//and if so, adds 1 to the currentIndex to
 																				//advance.
-			currentIndex++;
+			this.currentIndex++;
+			if (this.currentIndex >= this.manyItems) {
+				this.currentIndex = this.manyItems;
+			}
 		}
 		else {
 			throw new IllegalStateException();
@@ -371,7 +376,7 @@ public class ApptBook implements Cloneable {
 																				//then the if statement will check if the data object at int i will
 																				//equal guide or if the returning int value from the compareTo method
 																				//is not 0.
-			if (data[i].equals(guide) || data[i].compareTo(guide) != 0) {
+			if (data[i].equals(guide)) {
 				currentIndex = i;
 			}
 		}
@@ -444,52 +449,43 @@ public class ApptBook implements Cloneable {
 	 **/
 	public void insert(Appointment element)
 	{
-		assert wellFormed() : "invariant failed at start of insert";
-		// TODO: Implemented by student.														//Basically, I set up three fields to temporarily
-																								//hold things: A temporary array, and int field, and
-																								//a boolean
-																								//The int elementPosition serves to remember where the
-																								//element should be placed after checking the cases
-																								//of equality
-																								//Two conditions must occure for the for loop to break
-																								//and that is if there exists and element that is equal
-																								//to the given element or if there exists an element
-																								//greater than the given element.
 		
-		Appointment[] temp = new Appointment[data.length + 1];
-		int elementPosition = 0;
-		
-		for (int i = 0; i < data.length; ++i) {
-			if (data[i].equals(element)) {
-				elementPosition = i + 1;														//The elementPosition is after the equal element
-				temp[elementPosition] = element;
-				break;
-			}
-			if (element.compareTo(data[i]) > 0) {
-				elementPosition = i - 1;														//The elementPosition is right before the element
-																								//greater than it
-				break;
-			}
+		if (element == null) {
+			throw new IllegalArgumentException();
 		}
 		
-																								//After checking for the cases, process to construct
-																								//the new array after inserting the new one with 
-																								//the if statement running for-loops to fill in elements
-																								//before the elementPosition and the elements after it
-																								//as well in the case of there being an element that is equal
-																								//to the given element.
-																								//Otherwise, simply copy of the elements of data array and
-																								//insert the element wherever it needs to be,
+		assert wellFormed() : "invariant failed at start of insert";
+		// TODO: Implemented by student.			
+																							//Setup a temporary Appointment Array to
+																							//add the new element.
+		Appointment[] temp = new Appointment[data.length+1];
+																							//Setup an integer field elementPosition
+																							//to keep track where the new element
+																							//is supposed to be inserted.
+		int elementPosition = 0;
+		
+		if (data == null) {
+			temp[currentIndex] = element;
+		}
+		else {
+			for (int i = 0; i < data.length; ++i) {
+				if (data[i] == element) {
+					elementPosition = i + 1;
+					temp[elementPosition] = element;
+					break;
+				}
+			}
+		}
+
 		
 		for (int i = 0; i < elementPosition; ++i) {
 			temp[i] = data[i];
 		}
-		for (int i = elementPosition; i < data.length; ++i) {
-			temp[i + 1] = data[i];
-		}
-
+		
+		temp[currentIndex] = element;
 		
 		data = temp;
+
 		
 		assert wellFormed() : "invariant failed at end of insert";
 	}
