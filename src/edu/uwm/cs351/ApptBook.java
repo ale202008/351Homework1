@@ -100,7 +100,7 @@ public class ApptBook implements Cloneable {
 
 		// 3. None of the elements are null and all are in natural order
 		
-		for (int i = 0; i < count; ++i) {										//Currently, only checks if elements are null
+		for (int i = 0; i < manyItems; ++i) {										//Currently, only checks if elements are null
 																				//and will include the compareTo method once
 																				//I figure it out.
 			if ((data[i] == null && i > 0)) {
@@ -108,12 +108,19 @@ public class ApptBook implements Cloneable {
 			}
 		}
 		
-		for (int i = 0; i < count - 1; ++i) {									//Currently trying to use the compareTo method
+		for (int i = 0; i < manyItems - 1; ++i) {									//Currently trying to use the compareTo method
 																				//to check for natural ordering.
 			if (data[i+1] != null) {
-					if (data[i].compareTo(data[i+1]) > 0) {
+				for (int y = i; y < manyItems - 1; ++y) {
+					if (data[i].compareTo(data[y + 1]) > 0) {
 						return false;
+					}
 				}
+				
+				
+//					if (data[i].compareTo(data[i+1]) > 0) {
+//						return false;
+//				}
 			}
 		}
 		
@@ -482,7 +489,8 @@ public class ApptBook implements Cloneable {
 			temp[i] = data[i];
 		}
 		
-		temp[currentIndex] = element;
+		this.manyItems++;
+		
 		
 		data = temp;
 
