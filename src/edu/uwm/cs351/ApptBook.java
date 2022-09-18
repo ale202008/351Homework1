@@ -80,20 +80,45 @@ public class ApptBook implements Cloneable {
 		//    claims the book has
 		// TODO
 		
-		if (data.length != manyItems) {											//Returns false if the length of the array
+		int count = 0;
+		
+		for (int i = 0; i < data.length; ++i) {
+			if (data[i] != null) {
+				count++;
+			}
+		}
+		
+		if (count < manyItems) {												//Returns false if the length of the array
 																				//does not equal to the manyItems.
 																				//Might change depending if length and the
 																				//amount of elements are the same or not.
 			return false;
 		}
+		
 
 		// 3. None of the elements are null and all are in natural order
 		
-		for (int i = 0; i < data.length; ++i) {									//Currently, only checks if elements are null
+		for (int i = 0; i < count; ++i) {										//Currently, only checks if elements are null
 																				//and will include the compareTo method once
 																				//I figure it out.
-			if (data[i] == null) {
+			if ((data[i] == null && i > 0)) {
 				return false;
+			}
+////			else if (data.length > 1) {
+////				if (data[i+1] != null && data[i].compareTo(data[i+1]) > 0) {
+////					return false;
+////				}
+//			}
+		}
+		
+		for (int i = 0; i < count - 1; ++i) {									//Currently trying to use the compareTo method
+																				//to check for natural ordering.
+			if (data[i+1] != null) {
+				for (int y = 0; y < count - 1; ++y) {
+					if (data[i].compareTo(data[y+1]) > 0) {
+						return false;
+					}
+				}
 			}
 		}
 		
@@ -264,7 +289,14 @@ public class ApptBook implements Cloneable {
 		assert wellFormed() : "invariant failed at start of advance";
 		// TODO: Implemented by student.
 		
-		
+		if (isCurrent()) {														//Checks if isCurrent() method returns true,
+																				//and if so, adds 1 to the currentIndex to
+																				//advance.
+			currentIndex++;
+		}
+		else {
+			throw new IllegalStateException();
+		}
 		
 		assert wellFormed() : "invariant failed at end of advance";
 	}
@@ -286,6 +318,34 @@ public class ApptBook implements Cloneable {
 	{
 		assert wellFormed() : "invariant failed at start of removeCurrent";
 		// TODO: Implemented by student.
+		
+		if (isCurrent()) {														//Checks if isCurrent() method returns true,
+																				//and if so, turns the current element into null
+																				//so that in the for-loop we can make a new array
+																				//that is of size data.length - 1 and only consists
+																				//of the remaining elements.
+																				//Wherever the element that is made into null is in 
+																				//the data array, the next element after or the element at
+																				//currentIndex + 1 is now where currentIndex points to.
+																				
+			data[currentIndex] = null;
+			Appointment[] temp = new Appointment[data.length-1];
+			int tempIndex = 0;
+			
+			for(int i = 0; i < data.length; ++i) {
+				if (data[i] != null) {
+					temp[tempIndex] = data[i];
+					tempIndex++;
+				}
+			}
+			
+			data = temp;
+			
+		}
+		else {
+			throw new IllegalStateException();
+		}
+		
 		assert wellFormed() : "invariant failed at end of removeCurrent";
 	}
 	
@@ -298,6 +358,22 @@ public class ApptBook implements Cloneable {
 		// TODO: use other methods.
 		// (Binary search would be much faster for a large book.
 		// but don't worry about efficiency for this method yet.)
+		
+		for (int i = 0; i < data.length; ++i) {									//Checks equality between objects as the for-loop
+																				//iterates through the data array to check which
+																				//Appointment object elements equal to guide and set the
+																				//current index to that position represented by int i.
+																				//I don't know how to do the greater case of this statement
+																				//so for now just equal.
+																				//If I am understanding the compareTo method in Appointment.java
+																				//then the if statement will check if the data object at int i will
+																				//equal guide or if the returning int value from the compareTo method
+																				//is not 0.
+			if (data[i].equals(guide) || data[i].compareTo(guide) != 0) {
+				currentIndex = i;
+			}
+		}
+		
 	}
 
 	/**
@@ -321,6 +397,31 @@ public class ApptBook implements Cloneable {
 	{
 		// TODO: Implemented by student.
 		// NB: do not check invariant
+		
+		if (minimumCapacity >= Integer.MAX_VALUE) {
+			throw new OutOfMemoryError();
+		}
+		
+		if (data.length < minimumCapacity && minimumCapacity/data.length == 2) {
+			Appointment[] temp = new Appointment[2*data.length];
+			for (int i = 0; i < 0; ++i) {
+				temp[i] = data[i];
+			}
+			data = temp;
+		}
+		else if (minimumCapacity/data.length > 2) {
+			Appointment[] temp = new Appointment[minimumCapacity];
+			for (int i = 0; i < 0; ++i) {
+				temp[i] = data[i];
+			}
+			data = temp;
+		}
+		
+		if (data.length == minimumCapacity) {
+			boolean y = true;
+		}
+
+		
 	}
 
 	/**
@@ -411,11 +512,11 @@ public class ApptBook implements Cloneable {
 	// don't change this nested class:
 	public static class TestInvariantChecker extends TestCase {
 		Time now = new Time();
-		Appointment e1 = new Appointment(new Period(now,Duration.HOUR),"1: think");
-		Appointment e2 = new Appointment(new Period(now,Duration.DAY),"2: current");
-		Appointment e3 = new Appointment(new Period(now.add(Duration.HOUR),Duration.HOUR),"3: eat");
-		Appointment e4 = new Appointment(new Period(now.add(Duration.HOUR.scale(2)),Duration.HOUR.scale(8)),"4: sleep");
-		Appointment e5 = new Appointment(new Period(now.add(Duration.DAY),Duration.DAY),"5: tomorrow");
+		Appointment e1 = new Appointment(new Period(now,Duration.HOUR),"1: think");											//An hour	//e1
+		Appointment e2 = new Appointment(new Period(now,Duration.DAY),"2: current");										//24 hours	//e3
+		Appointment e3 = new Appointment(new Period(now.add(Duration.HOUR),Duration.HOUR),"3: eat");						//2 hours	//e4
+		Appointment e4 = new Appointment(new Period(now.add(Duration.HOUR.scale(2)),Duration.HOUR.scale(8)),"4: sleep");	//10 hours	//e2
+		Appointment e5 = new Appointment(new Period(now.add(Duration.DAY),Duration.DAY),"5: tomorrow");						//48 hours	//e5
 		ApptBook hs;
 
 		protected void setUp() {

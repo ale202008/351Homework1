@@ -46,9 +46,15 @@ public class Appointment implements Comparable<Appointment> {
 	@Override
 	public int compareTo(Appointment o) {
 		int c = time.getStart().compareTo(o.time.getStart());
-		if (c != 0) return c;
+		
+		if (c != 0) 
+			return c;
+		
 		c = time.getLength().compareTo(o.time.getLength());
-		if (c != 0) return c;
+		
+		if (c != 0) 
+			return c;
+		
 		return description.compareTo(o.description);
 	}
 }
