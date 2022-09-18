@@ -82,7 +82,9 @@ public class ApptBook implements Cloneable {
 		
 		int count = 0;
 		
-		for (int i = 0; i < data.length; ++i) {
+		for (int i = 0; i < data.length; ++i) {									//iterates through the array keeping a count
+																				//field to keep count of how many elements
+																				//exist within the array to compare to manyItems.
 			if (data[i] != null) {
 				count++;
 			}
