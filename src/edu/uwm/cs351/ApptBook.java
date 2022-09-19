@@ -517,109 +517,6 @@ public class ApptBook implements Cloneable {
 				currentIndex = manyItems;
 			}
 		}
-		
-//		else if (manyItems >= 1) {														//Checks to see if there are multiple elements within
-//																						//the array and does some standards such as ticking
-//																						//manyItems up by 1 and setting the current element.
-//			manyItems++;
-//			setCurrent(element);
-//			
-//			if (currentIndex == 0) {
-//																						//If the currentIndex is equal to 0, meaning that there
-//																						//exists only 1 element, check such cases if the given
-//																						//Appointment is greater than or less than and add the
-//																						//element as found
-//				if (element.compareTo(data[currentIndex]) > 0) {
-//					data[currentIndex + 1] = element;
-//				}
-//				else if (element.compareTo(data[currentIndex]) < 0) {
-//					for (int i = 0; i < manyItems; ++i) {
-//						if (i < manyItems - 1) {
-//							data[i + 1] = data[i];
-//						}
-//					}
-//					data[currentIndex] = element;
-//					currentIndex++;
-//				}
-//				else if (element.compareTo(data[currentIndex]) == 0) {
-//					data[currentIndex + 1] = element;
-//				}
-//																						//Earlier boolean field that was set to isCurrent. If
-//																						//it is false then it means that there does not exist
-//																						//a current element, so set it equal to manyItems as
-//																						//denoted in the instructions above.
-//				if (!none) {
-//					currentIndex = manyItems;
-//				}
-//				
-//			}
-//																						//Then we separate the cases, I chose to check if the
-//																						//Appointment object before the currentIndex is greater
-//																						//than or lower than the given Appointment object and
-//																						//runs through the cases as such.
-//			else if (element.compareTo(data[currentIndex-1]) > 0) {
-//				
-//				for (int i = currentIndex; i < manyItems; ++i) {
-//					if (i < manyItems - 1) {
-//						data[i + 1] = data[i];
-//					}
-//				}
-//				
-//				data[currentIndex] = element;
-//				currentIndex++;
-//				
-//				if (!none) {
-//					currentIndex = manyItems;
-//				}
-//			}
-//			else if (element.compareTo(data[currentIndex-1]) < 0) {
-//				Appointment[] temp = data.clone();
-//				boolean dupes = false;
-//
-//				
-//				for (int i = 0; i < manyItems; ++i) {
-//					if (i < manyItems - 1) {
-//						data[i + 1] = temp[i];
-//					}
-//				}
-//				
-////				for (int i = 0; i < manyItems; ++i) {
-////					int dupesCount = 0;
-////					for (int y = 0; y < manyItems; ++y) {
-////						if (data[i] == data[y]) {
-////							dupesCount++;
-////							if (dupesCount >= 2) {
-////								dupes = true;
-////								break;
-////							}
-////						}
-////					}
-////				}
-//
-//				
-//				if (!dupes) {
-//					data[currentIndex-1] = element;
-//				}
-//
-//				
-//				
-//				if (!none) {
-//					currentIndex = manyItems;
-//				}
-//			}
-//			else if (element.compareTo(data[currentIndex-1]) == 0) {
-//				data[currentIndex+1] = element;
-//			}
-//																						//Prints out the array for visuals only, will remove
-//																						//in the end. Same thing with index.
-//			for(int i = 0; i < data.length; ++i) {
-//				System.out.println(data[i]);
-//			}
-//			
-//			System.out.println(currentIndex);
-//
-//			
-//		}
 		else if (manyItems >= 1) {
 																						//Major revamp in the insert method again as
 																						//I added some more conditions to setCurrent
@@ -627,45 +524,83 @@ public class ApptBook implements Cloneable {
 			setCurrent(element);
 			
 			if (manyItems == currentIndex) {
-				
-				if (element.compareTo(data[0]) < 0) {
-					for (int i = 0; i <= manyItems; i++) {
-						if (data[i] == null) {
-							data[i] = element;
-							break;
+																						//Checks to see if there is a current element,
+																						//and if so run through the cases.
+//				if (element.compareTo(data[0]) < 0) {
+//					for (int i = 0; i <= manyItems; i++) {
+//						if (data[i] == null) {
+//							data[i] = element;
+//							break;
+//						}
+//					}
+//					currentIndex++;
+//					manyItems++;
+					
+					for (int i = 0; i < manyItems; ++i) {
+																						//Runs a for-loop that checks for two conditions
+																						//first, checks if data[i] is null to see check for errors
+																						//and then checks for that element if it is greater than
+																						//or less than it to see where to place. Much better than
+																						//the previous mess I would believe.
+						if (data[i] != null) {
+							if (element.compareTo(data[i]) < 0) {
+								data[i] = element;
+								currentIndex++;
+								manyItems++;
+								break;	
+							}
+							else if (element.compareTo(data[i]) > 0) {
+								data[currentIndex] = element;
+								currentIndex--;
+								manyItems++;
+								break;
+							}
 						}
 					}
-					currentIndex++;
-					manyItems++;
 					
 					if(!none) {
 						currentIndex = manyItems;
 					}
-				}
-				else if (element.compareTo(data[0]) > 0) {
-					for (int i = 0; i <= manyItems; i++) {
-						if (data[i] == null) {
-							data[i] = element;
-							break;
-						}
-					}
-					currentIndex--;
-					manyItems++;
-					
-					if(!none) {
-						currentIndex = manyItems;
-					}
-				}
+//				}
+//				else if (element.compareTo(data[0]) > 0) {
+//					for (int i = 0; i <= manyItems; i++) {
+//						if (data[i] == null) {
+//							data[i] = element;
+//							break;
+//						}
+//					}
+//					currentIndex--;
+//					manyItems++;
+//					
+//					if(!none) {
+//						currentIndex = manyItems;
+//					}
+//				}
 				
 			}
 
 			else if (manyItems != currentIndex) {
 				if(element.compareTo(data[currentIndex]) == 0) {
-					for(int i = 0; i < manyItems + 1; ++i) {
-						if (data[i] == null && data[i] != element) {
-							data[i] = element;
+					Appointment[] temp = data.clone();
+					
+					for (int i = 0; i < manyItems; ++i)
+						if(element.compareTo(data[i]) == 0 && data[i+1] == null) {
+							data[i+1] = element;
+							manyItems++;
+							break;
 						}
+						else if (element.compareTo(data[i]) == 0 && element.compareTo(data[i+1]) < 0) {
+							data[i+1] = element;
+							manyItems++;
+							for (int y = i+1; y < manyItems; ++y) {
+								data[y] = temp[y-1];
+							}
+							break;
 					}
+					
+
+					
+
 					
 					int count = 0;
 					
@@ -681,7 +616,6 @@ public class ApptBook implements Cloneable {
 					
 					
 
-					manyItems++;
 					
 					if(!none) {
 						currentIndex = manyItems;
