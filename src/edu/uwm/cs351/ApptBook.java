@@ -583,11 +583,17 @@ public class ApptBook implements Cloneable {
 			}
 		}
 		
-		else if (manyItems >= 1) {
+		else if (manyItems >= 1) {														//Checks to see if there are multiple elements within
+																						//the array and does some standards such as ticking
+																						//manyItems up by 1 and setting the current element.
 			manyItems++;
 			setCurrent(element);
 			
 			if (currentIndex == 0) {
+																						//If the currentIndex is equal to 0, meaning that there
+																						//exists only 1 element, check such cases if the given
+																						//Appointment is greater than or less than and add the
+																						//element as found
 				if (element.compareTo(data[currentIndex]) > 0) {
 					data[currentIndex + 1] = element;
 				}
@@ -603,12 +609,19 @@ public class ApptBook implements Cloneable {
 				else if (element.compareTo(data[currentIndex]) == 0) {
 					data[currentIndex + 1] = element;
 				}
-				
+																						//Earlier boolean field that was set to isCurrent. If
+																						//it is false then it means that there does not exist
+																						//a current element, so set it equal to manyItems as
+																						//denoted in the instructions above.
 				if (!none) {
 					currentIndex = manyItems;
 				}
 				
 			}
+																						//Then we separate the cases, I chose to check if the
+																						//Appointment object before the currentIndex is greater
+																						//than or lower than the given Appointment object and
+																						//runs through the cases as such.
 			else if (element.compareTo(data[currentIndex-1]) > 0) {
 				
 				for (int i = currentIndex; i < manyItems; ++i) {
@@ -625,20 +638,27 @@ public class ApptBook implements Cloneable {
 				}
 			}
 			else if (element.compareTo(data[currentIndex-1]) < 0) {
+				Appointment[] temp = data.clone();
 				
 				
-				for (int i = currentIndex; i < manyItems; ++i) {
+				for (int i = 0; i < manyItems; ++i) {
 					if (i < manyItems - 1) {
-						data[i + 1] = data[i];
+						data[i + 1] = temp[i];
 					}
 				}
+				
+				data[currentIndex-1] = element;
 				
 				
 				if (!none) {
 					currentIndex = manyItems;
 				}
 			}
-			
+			else if (element.compareTo(data[currentIndex-1]) == 0) {
+				data[currentIndex+1] = element;
+			}
+																						//Prints out the array for visuals only, will remove
+																						//in the end. Same thing with index.
 			for(int i = 0; i < data.length; ++i) {
 				System.out.println(data[i]);
 			}
