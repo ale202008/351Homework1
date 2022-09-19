@@ -342,6 +342,8 @@ public class ApptBook implements Cloneable {
 																				//Wherever the element that is made into null is in 
 																				//the data array, the next element after or the element at
 																				//currentIndex + 1 is now where currentIndex points to.
+			
+
 																				
 			data[currentIndex] = null;
 			Appointment[] temp = new Appointment[data.length-1];
@@ -354,6 +356,7 @@ public class ApptBook implements Cloneable {
 				}
 			}
 			
+			manyItems--;														//added manyItems-- as that did matter to my code.
 			data = temp;
 			
 		}
@@ -388,8 +391,6 @@ public class ApptBook implements Cloneable {
 				if (guide.compareTo(data[i]) <= 0) {
 					currentIndex = i;
 				}
-				else
-					currentIndex = i+1;
 			}
 		}
 		
@@ -490,9 +491,7 @@ public class ApptBook implements Cloneable {
 		
 
 		ensureCapacity(data.length+1);
-		
 		boolean none = this.isCurrent();
-		Appointment[] temp = data.clone();
 		
 		if (data.length > Integer.MAX_VALUE) {
 			throw new OutOfMemoryError();
@@ -500,78 +499,154 @@ public class ApptBook implements Cloneable {
 																						//if the array has no elements inside it
 																						//insert the element
 		
+//		if (data[0] == null) {															//Checks if the array is empty of size 1
+//																						//and if so just adds the first given element
+//			data[0] = element;
+//			manyItems++;
+//			if (!none) {
+//				currentIndex = manyItems;
+//			}
+//		}
+//		
+//		else if (manyItems >= 1) {														//If manyitems is equal to 1, compare it to the single element
+//																						//and check if it needs to be added before or after.
+//			setCurrent(element);
+//			manyItems++;
+//			
+//			if (currentIndex == 0) {
+//				
+//				
+//				
+//				for (int i = 0; i < manyItems; ++i) {
+//					if (i < manyItems - 1) {
+//						data[i+1] = data[i];
+//					}
+//				}
+//				
+//				data[currentIndex] = element;
+//				currentIndex++;
+//
+//				
+////				for (int i = 0; i < manyItems; ++i) {
+////					if (data[i].equals(temp[0])) {
+////						currentIndex = i;
+////					}
+////				}
+//			}
+//			else if (element.compareTo(data[currentIndex-1]) < 0){
+//				
+//				for (int i = 0; i < manyItems; ++i) {
+//					data[i + 1] = data[i];
+//				}
+//				
+//				data[currentIndex] = element;
+//				currentIndex++;
+//				
+//
+//			}
+//			else if (element.compareTo(data[currentIndex-1]) > 0) {
+//				for (int i = currentIndex; i < manyItems; ++i) {
+//					data[i+1] = data[i];
+//				}
+//				
+//				data[currentIndex] = element;
+//				currentIndex--;
+////
+////				for (int i = 0; i < manyItems; ++i) {
+////					if (data[i].equals(temp[0])) {
+////						currentIndex = i;
+////					}
+////				}
+//			}
+//			
+//
+//			System.out.println(data[0]);
+//			System.out.println(data[1]);
+//			System.out.println(data[2]);
+//			
+//			if (!none) {
+//				currentIndex = manyItems;
+//			}
+//			
+//
+//		}
+//		
+		
+		
 		if (data[0] == null) {															//Checks if the array is empty of size 1
 																						//and if so just adds the first given element
 			data[0] = element;
 			manyItems++;
+			
 			if (!none) {
 				currentIndex = manyItems;
 			}
 		}
 		
-		else if (manyItems >= 1) {														//If manyitems is equal to 1, compare it to the single element
-																						//and check if it needs to be added before or after.
-			setCurrent(element);
+		else if (manyItems >= 1) {
 			manyItems++;
+			setCurrent(element);
 			
 			if (currentIndex == 0) {
-				
-				for (int i = 0; i < manyItems; ++i) {
-					if (i < manyItems - 1) {
-						data[i+1] = data[i];
+				if (element.compareTo(data[currentIndex]) > 0) {
+					data[currentIndex + 1] = element;
+				}
+				else if (element.compareTo(data[currentIndex]) < 0) {
+					for (int i = 0; i < manyItems; ++i) {
+						if (i < manyItems - 1) {
+							data[i + 1] = data[i];
+						}
 					}
+					data[currentIndex] = element;
+					currentIndex++;
+				}
+				else if (element.compareTo(data[currentIndex]) == 0) {
+					data[currentIndex + 1] = element;
 				}
 				
-				data[currentIndex] = element;
-				
-				for (int i = 0; i < manyItems; ++i) {
-					if (data[i].equals(temp[0])) {
-						currentIndex = i;
-					}
-				}
-			}
-			else if (element.compareTo(data[currentIndex-1]) < 0){
-				
-				for (int i = 0; i < manyItems; ++i) {
-					data[i + 1] = data[i];
+				if (!none) {
+					currentIndex = manyItems;
 				}
 				
-				data[currentIndex] = element;
-				
-				for (int i = 0; i < manyItems; ++i) {
-					if (data[i].equals(temp[0])) {
-						currentIndex = i;
-					}
-				}
 			}
 			else if (element.compareTo(data[currentIndex-1]) > 0) {
+				
 				for (int i = currentIndex; i < manyItems; ++i) {
-					data[i+1] = data[i];
+					if (i < manyItems - 1) {
+						data[i + 1] = data[i];
+					}
 				}
 				
 				data[currentIndex] = element;
 				currentIndex++;
-
-				for (int i = 0; i < manyItems; ++i) {
-					if (data[i].equals(temp[0])) {
-						currentIndex = i;
+				
+				if (!none) {
+					currentIndex = manyItems;
+				}
+			}
+			else if (element.compareTo(data[currentIndex-1]) < 0) {
+				
+				
+				for (int i = currentIndex; i < manyItems; ++i) {
+					if (i < manyItems - 1) {
+						data[i + 1] = data[i];
 					}
+				}
+				
+				
+				if (!none) {
+					currentIndex = manyItems;
 				}
 			}
 			
-
-			System.out.println(data[0]);
-			System.out.println(data[1]);
-			System.out.println(data[2]);
-			
-			if (!none) {
-				currentIndex = manyItems;
+			for(int i = 0; i < data.length; ++i) {
+				System.out.println(data[i]);
 			}
 			
+			System.out.println(currentIndex);
 
+			
 		}
-		
-		
 
 		
 
