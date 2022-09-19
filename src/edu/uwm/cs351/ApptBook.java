@@ -273,7 +273,7 @@ public class ApptBook implements Cloneable {
 																				//and if true to return the Appointment object
 																				//at the currrentIndex position within the
 																				//data array.
-			return this.data[this.currentIndex];
+			return data[currentIndex];
 		}
 		else {
 			throw new IllegalStateException();
@@ -303,10 +303,11 @@ public class ApptBook implements Cloneable {
 		if (isCurrent()) {														//Checks if isCurrent() method returns true,
 																				//and if so, adds 1 to the currentIndex to
 																				//advance.
-			this.currentIndex++;
-			if (this.currentIndex >= this.manyItems) {
-				this.currentIndex = this.manyItems;
+			if (this.currentIndex == this.manyItems) {
+				return;
 			}
+			else
+				currentIndex++;
 		}
 		else {
 			throw new IllegalStateException();
@@ -384,12 +385,8 @@ public class ApptBook implements Cloneable {
 																							//the first element that is equal or greater than
 																							//guide
 			if (data[i] != null) {
-				if (data[i].compareTo(guide) == 0) {
+				if (guide.compareTo(data[i]) <= 0) {
 					currentIndex = i;
-					if (data[i].compareTo(guide) > 0) {
-						currentIndex = i;
-						break;
-					}
 				}
 			}
 		}
@@ -491,10 +488,6 @@ public class ApptBook implements Cloneable {
 		
 
 		ensureCapacity(data.length+1);
-
-		
-		manyItems++;
-		currentIndex = manyItems;
 		
 		boolean none = false;
 		
@@ -503,24 +496,25 @@ public class ApptBook implements Cloneable {
 		}
 																						//if the array has no elements inside it
 																						//insert the element
-		for (int i = 0; i < 1; ++i) {
-			if (data[i] == null) {
-				none = true;
-			}
-		}
 		
-		if (none) {
-			for (int i = 0; i < manyItems; ++i) {
-				if(data[i] == null) {
-					data[i] = element;
+		if (data[0] == null) {															//Checks if the array is empty of size 1
+																						//and if so just adds the first given element
+			data[0] = element;
+			manyItems++;
+			currentIndex = manyItems;
+		}
+		else if (manyItems == 1) {														//If manyitems is equal to 1, compare it to the single element
+																						//and check if it needs to be added before or after.
+			setCurrent(element);
+			if (element.compareTo(data[currentIndex-1]) < 0){
+				for (int i = 0; i < manyItems; ++i) {
+					data[i + 1] = data[i];
 				}
 			}
+			data[currentIndex] = element;
+			manyItems++;
+			currentIndex = manyItems;
 		}
-		
-		if (!none) {
-			data[currentIndex-1] = element;
-		}
-		
 		
 		
 
