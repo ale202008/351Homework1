@@ -500,7 +500,7 @@ public class ApptBook implements Cloneable {
 		// TODO: Implemented by student.
 		
 
-		ensureCapacity(data.length+1);
+		ensureCapacity(manyItems+1);
 		boolean none = this.isCurrent();
 		
 		if (data.length > Integer.MAX_VALUE) {
@@ -658,25 +658,34 @@ public class ApptBook implements Cloneable {
 				}
 				
 			}
+
 			else if (manyItems != currentIndex) {
-				boolean dupes = false;
-				
-				for (int i = 0; i < manyItems-1; ++i) {
-					for (int y = 0; y < manyItems-1; ++y) {
-						if (data[i] == data[y+1]) {
-							dupes = true;
+				if(element.compareTo(data[currentIndex]) == 0) {
+					for(int i = 0; i < manyItems + 1; ++i) {
+						if (data[i] == null && data[i] != element) {
+							data[i] = element;
 						}
 					}
-				}
-				
-				if (dupes) {
-					Appointment[] temp = data.clone();
-					for (int i = 0; i < manyItems-1; ++i) {
-						if (i < manyItems) {
-							data[i+1] = temp[i];
+					
+					int count = 0;
+					
+					for (int i = 0; i < manyItems + 1; ++i) {
+						if (data[i] == element) {
+							count++;
 						}
 					}
+					
+					if (count > 2) {
+						currentIndex++;
+					}
+					
+					
+
 					manyItems++;
+					
+					if(!none) {
+						currentIndex = manyItems;
+					}
 				}
 				else {
 					Appointment[] temp = data.clone();
@@ -688,6 +697,10 @@ public class ApptBook implements Cloneable {
 					data[currentIndex] = element;
 					currentIndex++;
 					manyItems++;
+					
+					if(!none) {
+						currentIndex = manyItems;
+					}
 				}
 			}
 			
