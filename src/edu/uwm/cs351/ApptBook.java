@@ -526,15 +526,6 @@ public class ApptBook implements Cloneable {
 			if (manyItems == currentIndex) {
 																						//Checks to see if there is a current element,
 																						//and if so run through the cases.
-//				if (element.compareTo(data[0]) < 0) {
-//					for (int i = 0; i <= manyItems; i++) {
-//						if (data[i] == null) {
-//							data[i] = element;
-//							break;
-//						}
-//					}
-//					currentIndex++;
-//					manyItems++;
 					
 					for (int i = 0; i < manyItems; ++i) {
 																						//Runs a for-loop that checks for two conditions
@@ -561,21 +552,6 @@ public class ApptBook implements Cloneable {
 					if(!none) {
 						currentIndex = manyItems;
 					}
-//				}
-//				else if (element.compareTo(data[0]) > 0) {
-//					for (int i = 0; i <= manyItems; i++) {
-//						if (data[i] == null) {
-//							data[i] = element;
-//							break;
-//						}
-//					}
-//					currentIndex--;
-//					manyItems++;
-//					
-//					if(!none) {
-//						currentIndex = manyItems;
-//					}
-//				}
 				
 			}
 
@@ -680,24 +656,43 @@ public class ApptBook implements Cloneable {
 		if (addend == null) {
 			throw new NullPointerException();
 		}
-		
-		ensureCapacity(this.manyItems + addend.manyItems);
-		addend.start();
-		
-		for (int i = this.manyItems; i < this.manyItems + addend.manyItems; ++i) {
-			if (!addend.isCurrent()) {
+																							//Initialized a clone of addend as as recommended
+																							//and move the same boolean condition from the insert
+																							//method to insertAll
+		ApptBook tempAddend = addend.clone();
+		boolean none = isCurrent();
+																							//Ensure the array is large enough for the incoming
+																							//elements from addend.
+		ensureCapacity(this.manyItems + tempAddend.manyItems);
+																							//Starts addend to the first element within the array
+		tempAddend.start();
+																							//We start off at the this.manyItems to get the last element
+																							//position within the array, then we continue on to the
+																							//total elements from this.manyItems and the addend.manyItems
+		for (int i = this.manyItems; i < this.manyItems + tempAddend.manyItems; ++i) {
+																							//Checks to see if there exists a current element and if not
+																							//closes the for-loop.
+			if (!tempAddend.isCurrent()) {
 				break;
 			}
-			data[i] = addend.getCurrent();
-			addend.advance();
+																							//Uses the insert method to insert elements from addend
+			this.insert(tempAddend.getCurrent());
+																							//Advances forward 1 position within addend.
+			tempAddend.advance();
 		}
-		
-		this.manyItems += addend.manyItems;
-		
+																							//Check to see if there exists a current element
+																							//within the new array, and if not equals currentIndex
+																							//to manyItems
+		if (!none) {
+			currentIndex = manyItems;
+		}
+																							//Temporary way to represent the array for visuals only.
 		for(int i = 0; i < data.length; ++i) {
 			System.out.println(data[i]);
 		}
-		
+																							//Temporary way to represent the currentIndex for visuals
+																							//only. Will remove these later.
+		System.out.println(currentIndex);
 		
 		assert wellFormed() : "invariant failed at end of insertAll";
 		assert addend.wellFormed() : "invariant of addend broken in insertAll";
@@ -740,11 +735,11 @@ public class ApptBook implements Cloneable {
 	// don't change this nested class:
 	public static class TestInvariantChecker extends TestCase {
 		Time now = new Time();
-		Appointment e1 = new Appointment(new Period(now,Duration.HOUR),"1: think");											//An hour	//e1
-		Appointment e2 = new Appointment(new Period(now,Duration.DAY),"2: current");										//24 hours	//e3
-		Appointment e3 = new Appointment(new Period(now.add(Duration.HOUR),Duration.HOUR),"3: eat");						//2 hours	//e4
-		Appointment e4 = new Appointment(new Period(now.add(Duration.HOUR.scale(2)),Duration.HOUR.scale(8)),"4: sleep");	//10 hours	//e2
-		Appointment e5 = new Appointment(new Period(now.add(Duration.DAY),Duration.DAY),"5: tomorrow");						//48 hours	//e5
+		Appointment e1 = new Appointment(new Period(now,Duration.HOUR),"1: think");											
+		Appointment e2 = new Appointment(new Period(now,Duration.DAY),"2: current");										
+		Appointment e3 = new Appointment(new Period(now.add(Duration.HOUR),Duration.HOUR),"3: eat");						
+		Appointment e4 = new Appointment(new Period(now.add(Duration.HOUR.scale(2)),Duration.HOUR.scale(8)),"4: sleep");	
+		Appointment e5 = new Appointment(new Period(now.add(Duration.DAY),Duration.DAY),"5: tomorrow");						
 		ApptBook hs;
 
 		protected void setUp() {
