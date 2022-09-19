@@ -388,6 +388,8 @@ public class ApptBook implements Cloneable {
 				if (guide.compareTo(data[i]) <= 0) {
 					currentIndex = i;
 				}
+				else
+					currentIndex = i+1;
 			}
 		}
 		
@@ -489,7 +491,8 @@ public class ApptBook implements Cloneable {
 
 		ensureCapacity(data.length+1);
 		
-		boolean none = false;
+		boolean none = this.isCurrent();
+		Appointment[] temp = data.clone();
 		
 		if (data.length > Integer.MAX_VALUE) {
 			throw new OutOfMemoryError();
@@ -501,19 +504,71 @@ public class ApptBook implements Cloneable {
 																						//and if so just adds the first given element
 			data[0] = element;
 			manyItems++;
-			currentIndex = manyItems;
+			if (!none) {
+				currentIndex = manyItems;
+			}
 		}
-		else if (manyItems == 1) {														//If manyitems is equal to 1, compare it to the single element
+		
+		else if (manyItems >= 1) {														//If manyitems is equal to 1, compare it to the single element
 																						//and check if it needs to be added before or after.
 			setCurrent(element);
-			if (element.compareTo(data[currentIndex-1]) < 0){
+			manyItems++;
+			
+			if (currentIndex == 0) {
+				
+				for (int i = 0; i < manyItems; ++i) {
+					if (i < manyItems - 1) {
+						data[i+1] = data[i];
+					}
+				}
+				
+				data[currentIndex] = element;
+				
+				for (int i = 0; i < manyItems; ++i) {
+					if (data[i].equals(temp[0])) {
+						currentIndex = i;
+					}
+				}
+			}
+			else if (element.compareTo(data[currentIndex-1]) < 0){
+				
 				for (int i = 0; i < manyItems; ++i) {
 					data[i + 1] = data[i];
 				}
+				
+				data[currentIndex] = element;
+				
+				for (int i = 0; i < manyItems; ++i) {
+					if (data[i].equals(temp[0])) {
+						currentIndex = i;
+					}
+				}
 			}
-			data[currentIndex] = element;
-			manyItems++;
-			currentIndex = manyItems;
+			else if (element.compareTo(data[currentIndex-1]) > 0) {
+				for (int i = currentIndex; i < manyItems; ++i) {
+					data[i+1] = data[i];
+				}
+				
+				data[currentIndex] = element;
+				currentIndex++;
+
+				for (int i = 0; i < manyItems; ++i) {
+					if (data[i].equals(temp[0])) {
+						currentIndex = i;
+					}
+				}
+			}
+			
+
+			System.out.println(data[0]);
+			System.out.println(data[1]);
+			System.out.println(data[2]);
+			
+			if (!none) {
+				currentIndex = manyItems;
+			}
+			
+
 		}
 		
 		
