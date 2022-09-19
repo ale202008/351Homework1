@@ -157,7 +157,7 @@ public class ApptBook implements Cloneable {
 																			//INITIAL_CAPACITY.
 																			//Initialized the fields manyItems and currentIndex
 		this.manyItems = 0;
-		this.currentIndex = 0;
+		this.currentIndex = this.manyItems;
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -181,7 +181,7 @@ public class ApptBook implements Cloneable {
 																			//initialCapacity.
 																			//Initialized the fields manyItems and currentIndex
 		this.manyItems = 0;
-		this.currentIndex = 0;
+		this.currentIndex = this.manyItems;
 		assert wellFormed() : "invariant failed at end of constructor";
 	}
 
@@ -373,18 +373,24 @@ public class ApptBook implements Cloneable {
 		// (Binary search would be much faster for a large book.
 		// but don't worry about efficiency for this method yet.)
 		
-		for (int i = 0; i < data.length; ++i) {									//Checks equality between objects as the for-loop
-																				//iterates through the data array to check which
-																				//Appointment object elements equal to guide and set the
-																				//current index to that position represented by int i.
-																				//I don't know how to do the greater case of this statement
-																				//so for now just equal.
-																				//If I am understanding the compareTo method in Appointment.java
-																				//then the if statement will check if the data object at int i will
-																				//equal guide or if the returning int value from the compareTo method
-																				//is not 0.
-			if (data[i].equals(guide)) {
-				currentIndex = i;
+		if (guide == null) {
+			return;
+		}
+
+		for (int i = 0; i < data.length; ++i) {	
+																							//Fixed up setCurrent and now it checks if
+																							//guide is equal to or greater than the object
+																							//in data. Will always set the currentIndex to
+																							//the first element that is equal or greater than
+																							//guide
+			if (data[i] != null) {
+				if (data[i].compareTo(guide) == 0) {
+					currentIndex = i;
+					if (data[i].compareTo(guide) > 0) {
+						currentIndex = i;
+						break;
+					}
+				}
 			}
 		}
 		
@@ -481,7 +487,44 @@ public class ApptBook implements Cloneable {
 		}
 		
 		assert wellFormed() : "invariant failed at start of insert";
-		// TODO: Implemented by student.			
+		// TODO: Implemented by student.
+		
+
+		ensureCapacity(data.length+1);
+
+		
+		manyItems++;
+		currentIndex = manyItems;
+		
+		boolean none = false;
+		
+		if (data.length > Integer.MAX_VALUE) {
+			throw new OutOfMemoryError();
+		}
+																						//if the array has no elements inside it
+																						//insert the element
+		for (int i = 0; i < 1; ++i) {
+			if (data[i] == null) {
+				none = true;
+			}
+		}
+		
+		if (none) {
+			for (int i = 0; i < manyItems; ++i) {
+				if(data[i] == null) {
+					data[i] = element;
+				}
+			}
+		}
+		
+		if (!none) {
+			data[currentIndex-1] = element;
+		}
+		
+		
+		
+
+		
 
 
 		
