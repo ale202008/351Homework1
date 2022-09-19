@@ -556,64 +556,71 @@ public class ApptBook implements Cloneable {
 			}
 
 			else if (manyItems != currentIndex) {
-				if(element.compareTo(data[currentIndex]) == 0) {
-					Appointment[] temp = data.clone();
-					
-					for (int i = 0; i < manyItems; ++i)
-						if(element.compareTo(data[i]) == 0 && data[i+1] == null) {
-							data[i+1] = element;
-							manyItems++;
-							break;
-						}
-						else if (element.compareTo(data[i]) == 0 && element.compareTo(data[i+1]) < 0) {
-							data[i+1] = element;
-							manyItems++;
-							for (int y = i+1; y < manyItems; ++y) {
-								data[y] = temp[y-1];
+																											//Rest of the code is basically
+																											//condensing my messy code made from earlier
+																											//if manyItems != currentIndex it means
+																											//there exist a current element so
+																											//run through these cases;
+				for (int i = 0; i < manyItems; ++i) {
+					if (data[i] != null) {
+						if (element.compareTo(data[i]) == 0) {
+																											//If the element is equal to the
+																											//data index at i, then check first
+																											//if there exists a null element
+																											//in front of it meaning there exist
+																											//probably only 1 element or multiple
+																											//copies of 1 element, put new element
+																											//to the right most copy.
+							if (data[i+1] == null) {
+								data[i+1] = element;
+								currentIndex = i;
+								manyItems++;
+								break;
 							}
-							break;
-					}
-					
-
-					
-
-					
-					int count = 0;
-					
-					for (int i = 0; i < manyItems + 1; ++i) {
-						if (data[i] == element) {
-							count++;
+																											//If the element is equal to the current
+																											//index at i and less than the index at
+																											//i+1 it means it is has the right most
+																											//of the equal elements and right before
+																											//greater element
+							else if (element.compareTo(data[i]) == 0 && element.compareTo(data[i+1]) < 0) {
+								for (int y = manyItems; y > currentIndex; --y) {
+									data[y] = data[y-1];
+								}
+								data[currentIndex] = element;
+								manyItems++;
+								break;
+							}
 						}
-					}
-					
-					if (count > 2) {
-						currentIndex++;
-					}
-					
-					
-
-					
-					if(!none) {
-						currentIndex = manyItems;
+																											//If the prior two cases have not passed
+																											//then more than likely only 1 element
+																											//exists. Checks if the given element is
+																											//greater than or lesser than the 1 element
+																											//and puts it where it needs to be.
+						else if (element.compareTo(data[i]) < 0) {
+							for (int y = manyItems; y > currentIndex; --y) {
+								data[y] = data[y-1];
+							}
+							data[i] = element;
+							currentIndex++;
+							manyItems++;
+							break;	
+						}
+						else if (element.compareTo(data[i]) > 0) {
+							for (int y = manyItems; y > currentIndex; --y) {
+								data[y] = data[y-1];
+							}
+							data[currentIndex] = element;
+							currentIndex++;
+							manyItems++;
+							break;
+						}
 					}
 				}
-				else {
-					Appointment[] temp = data.clone();
-					for (int i = 0; i < manyItems; ++i) {
-						if (i < manyItems) {
-							data[i+1] = temp[i];
-						}
-					}
-					data[currentIndex] = element;
-					currentIndex++;
-					manyItems++;
-					
-					if(!none) {
-						currentIndex = manyItems;
-					}
+				
+				if(!none) {
+					currentIndex = manyItems;
 				}
 			}
-			
 			
 			for (int i = 0; i < data.length; ++i) {
 				System.out.println(data[i]);
@@ -660,7 +667,7 @@ public class ApptBook implements Cloneable {
 																							//and move the same boolean condition from the insert
 																							//method to insertAll
 		ApptBook tempAddend = addend.clone();
-		boolean none = isCurrent();
+//		boolean none = isCurrent();
 																							//Ensure the array is large enough for the incoming
 																							//elements from addend.
 		ensureCapacity(this.manyItems + tempAddend.manyItems);
@@ -683,9 +690,9 @@ public class ApptBook implements Cloneable {
 																							//Check to see if there exists a current element
 																							//within the new array, and if not equals currentIndex
 																							//to manyItems
-		if (!none) {
-			currentIndex = manyItems;
-		}
+//		if (!none) {
+//			currentIndex = manyItems;
+//		}
 																							//Temporary way to represent the array for visuals only.
 		for(int i = 0; i < data.length; ++i) {
 			System.out.println(data[i]);
