@@ -343,9 +343,19 @@ public class ApptBook implements Cloneable {
 																				//the data array, the next element after or the element at
 																				//currentIndex + 1 is now where currentIndex points to.
 			
-
-																				
+			Appointment tempCurrentElement = null;
+			boolean currentItem = false;
+			
+			manyItems--;	
 			data[currentIndex] = null;
+			
+			if (data[currentIndex+1] != null) {
+				tempCurrentElement = data[currentIndex+1];
+				currentItem = true;
+			}
+			else
+				currentIndex = manyItems;
+					
 			Appointment[] temp = new Appointment[data.length-1];
 			int tempIndex = 0;
 			
@@ -355,10 +365,20 @@ public class ApptBook implements Cloneable {
 					tempIndex++;
 				}
 			}
-			
-			manyItems--;														//added manyItems-- as that did matter to my code.
+
 			data = temp;
 			
+			if (currentIndex != manyItems || currentItem) {
+				for (int i = 0; i < manyItems; ++i) {
+					if (tempCurrentElement == data[i]) {
+						currentIndex = i;
+						break;
+					}
+					this.advance();
+				}
+			}
+			
+
 		}
 		else {
 			throw new IllegalStateException();
@@ -521,6 +541,7 @@ public class ApptBook implements Cloneable {
 																						//Major revamp in the insert method again as
 																						//I added some more conditions to setCurrent
 																						//which changed some cases that I had to detect.
+			int tempCurrent = this.currentIndex;
 			setCurrent(element);
 			
 			if (manyItems == currentIndex) {
@@ -535,14 +556,37 @@ public class ApptBook implements Cloneable {
 																						//the previous mess I would believe.
 						if (data[i] != null) {
 							if (element.compareTo(data[i]) < 0) {
+								Appointment tempCurrentElement = data[tempCurrent];
+								
 								data[i] = element;
-								currentIndex++;
+								
+								this.start();
+								
+								for (int y = 0; y < manyItems; ++y) {
+									if(tempCurrentElement == data[y]) {
+										break;
+									}
+									this.advance();
+								}
+								
 								manyItems++;
 								break;	
 							}
 							else if (element.compareTo(data[i]) > 0) {
+								
+								Appointment tempCurrentElement = data[tempCurrent];
+								
 								data[currentIndex] = element;
-								currentIndex--;
+								
+								this.start();
+								
+								for (int y = 0; y < manyItems; ++y) {
+									if(tempCurrentElement == data[y]) {
+										break;
+									}
+									this.advance();
+								}
+								
 								manyItems++;
 								break;
 							}
@@ -572,7 +616,10 @@ public class ApptBook implements Cloneable {
 																											//copies of 1 element, put new element
 																											//to the right most copy.
 							if (data[i+1] == null) {
+								Appointment tempCurrentElement = data[tempCurrent];
+								
 								data[i+1] = element;
+								
 								currentIndex = i;
 								manyItems++;
 								break;
@@ -583,10 +630,25 @@ public class ApptBook implements Cloneable {
 																											//of the equal elements and right before
 																											//greater element
 							else if (element.compareTo(data[i]) == 0 && element.compareTo(data[i+1]) < 0) {
+								Appointment tempCurrentElement = data[tempCurrent];
+								
 								for (int y = manyItems; y > currentIndex; --y) {
 									data[y] = data[y-1];
 								}
+								
 								data[currentIndex] = element;
+								
+								this.start();
+								
+								for (int y = 0; y < manyItems; ++y) {
+									if(tempCurrentElement == data[y]) {
+										break;
+									}
+									this.advance();
+								}
+								
+								
+								
 								manyItems++;
 								break;
 							}
@@ -609,9 +671,30 @@ public class ApptBook implements Cloneable {
 							for (int y = manyItems; y > currentIndex; --y) {
 								data[y] = data[y-1];
 							}
+							
+							Appointment tempCurrentElement = data[tempCurrent];
+							
 							data[currentIndex] = element;
-							currentIndex++;
+							
+							this.start();
+																											//Got noted by Max Dreher that I should be
+																											//using a more logical approach to keep track
+																											//where the current element is and is going to
+																											//be
+																											//Copies a new appointment object of what the
+																											//current element was then iterates through
+																											//the array and finds the first equal instance
+																											//and sets currentIndex to there.
+							for (int z = 0; z < manyItems; ++z) {
+								if (data[z] == tempCurrentElement) {
+									currentIndex = z;
+									break;
+								}
+								this.advance();
+							}
+							
 							manyItems++;
+
 							break;
 						}
 					}
@@ -622,11 +705,6 @@ public class ApptBook implements Cloneable {
 				}
 			}
 			
-			for (int i = 0; i < data.length; ++i) {
-				System.out.println(data[i]);
-			}
-		
-			System.out.println(currentIndex);
 		}
 		
 
@@ -667,7 +745,9 @@ public class ApptBook implements Cloneable {
 																							//and move the same boolean condition from the insert
 																							//method to insertAll
 		ApptBook tempAddend = addend.clone();
-//		boolean none = isCurrent();
+		boolean noChange = false;
+		
+
 																							//Ensure the array is large enough for the incoming
 																							//elements from addend.
 		ensureCapacity(this.manyItems + tempAddend.manyItems);
@@ -689,17 +769,7 @@ public class ApptBook implements Cloneable {
 		}
 																							//Check to see if there exists a current element
 																							//within the new array, and if not equals currentIndex
-																							//to manyItems
-//		if (!none) {
-//			currentIndex = manyItems;
-//		}
-																							//Temporary way to represent the array for visuals only.
-		for(int i = 0; i < data.length; ++i) {
-			System.out.println(data[i]);
-		}
-																							//Temporary way to represent the currentIndex for visuals
-																							//only. Will remove these later.
-		System.out.println(currentIndex);
+																							//to manyItem
 		
 		assert wellFormed() : "invariant failed at end of insertAll";
 		assert addend.wellFormed() : "invariant of addend broken in insertAll";
