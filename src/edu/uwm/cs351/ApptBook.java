@@ -8,6 +8,9 @@ import java.util.spi.CalendarDataProvider;
 import junit.framework.TestCase;
 
 //Andrew Le, Homework #2, CS 351
+//Had help from Max Dreher in terms of me forgetting that
+//this.(method) works and syntax errors
+//Did not exchange, look, or copy code.
 
 /******************************************************************************
  * This class is a homework assignment;
